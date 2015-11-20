@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="Models.User" table="users">
+        <id column="ID" name="id" type="java.lang.Integer" />
+        <property column="username" name="userName" type="java.lang.String" />
+        <property column="password" name="password" type="string" />
+        <property column="email" name="email" type="java.lang.String" />
+        <property column="phone" name="phone" type="java.lang.String" />
+        <property column="first_name" name="firstName" type="java.lang.String" />
+        <property column="last_name" name="lastName" type="java.lang.String" />
+        <property column="logo_url" name="imageUrl" type="java.lang.String" />
+        <property column="date_birth" name="birthDate" type="java.util.Date" />
+        <property column="date_registred" name="registredDate" type="java.util.Date" />
+    </class>
+</hibernate-mapping>
