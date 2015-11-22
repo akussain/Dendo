@@ -7,11 +7,17 @@ import javax.ws.rs.core.Response;
 
 import methods.BCrypt;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import Dao.UserDAO;
+import Models.Company;
+import Models.User;
 
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -19,6 +25,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.List;
 
 @Path("/dendoservice")
 public class DendoService {
@@ -42,11 +49,13 @@ public class DendoService {
 	@Produces("application/json;charset=windows-1251")
 	public Response getCompanies() throws JSONException {
 		JSONObject listCompanies = new JSONObject();
-		try {            
+		try {        
+			/*
             Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/dendo","root", "");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/dendo","developer", "developer");
             Statement st = connection.createStatement();
             String  sqlQuery = "select id, name, description, category_id from companies";
+            
             ResultSet rs = st.executeQuery(sqlQuery);
             JSONArray jsonList = new JSONArray();
             while(rs.next()) {
@@ -58,14 +67,33 @@ public class DendoService {
 
                 jsonList.put(company);
             }
-
+            System.out.println("Yes");
             listCompanies.put("companies", jsonList);
+            */
+            
+            //Hibenate
+            Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
+    		
+            SessionFactory sessionFactory = configuration.buildSessionFactory();
+            Session session = sessionFactory.openSession();
+            Query query = session.createQuery("from Company");
+            List<Company> companies = query.list();
+            JSONArray jsonList = new JSONArray();
+            for(int i = 0; i < companies.size(); i++) {
+            	JSONObject company = new JSONObject();
+                company.put("id", companies.get(i).getId());
+                company.put("name", companies.get(i).getName());
+                company.put("desc", companies.get(i).getDesc());
+                company.put("category", "");
 
-            if(st != null) st.close();
-            if(connection != null) connection.close();
+                jsonList.put(company);
+            }
+            listCompanies.put("companies", jsonList);
+            //
+
 
         } catch (Exception e) {
-            
+            System.out.println(e.getMessage());
         }finally {
         }
 		return Response.status(200).entity(listCompanies.toString()).build();
@@ -78,7 +106,7 @@ public class DendoService {
 		JSONObject listPlaces = new JSONObject();
 		try {            
             Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/orderme","root", "");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/orderme","root", "");
             Statement st = connection.createStatement();
             String  sqlQuery = "select id, name, description, address, phone from restaurants";
             ResultSet rs = st.executeQuery(sqlQuery);
@@ -144,7 +172,7 @@ public class DendoService {
 		JSONObject listUsers = new JSONObject();
 		try {            
             Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/dendo","root", "");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/dendo","root", "");
             Statement st = connection.createStatement();
             String  sqlQuery = "select id, username, first_name, last_name, email, phone, logo_url from users";
             ResultSet rs = st.executeQuery(sqlQuery);
@@ -213,33 +241,15 @@ public class DendoService {
 	public Response login(@QueryParam("userName") String username, @QueryParam("password") String password) throws JSONException, NoSuchAlgorithmException {
 		JSONObject listComments = new JSONObject();
 		try {            
-            
-            //Login
             String generatedSecuredPasswordHash = BCrypt.hashpw(password, BCrypt.gensalt(12));
             System.out.println(generatedSecuredPasswordHash); 
             
-            //UserDAO udao = new UserDAO();
-            //String curPasswordHash = udao.getUser(username).getPassword();
-            
-            String curPasswordHash = "";
-            
-            //Using JDBC - should change to Hibernate
-            
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/dendo","root", "");
-            Statement st = connection.createStatement();
-            String  sqlQuery = "select id, name from companies where id = 1";
-            ResultSet rs = st.executeQuery(sqlQuery);
-            while(rs.next()) {
-            	curPasswordHash = rs.getString("name");
-            	System.out.println(curPasswordHash + " - user");
-            }
-            
-            
-            //System.out.println(generatedSecuredPasswordHash.equals(curPasswordHash) + "!");
+            UserDAO udao = new UserDAO();
+            String curPasswordHash = udao.getUser(username).getPassword();
             
             boolean matched = BCrypt.checkpw(curPasswordHash, generatedSecuredPasswordHash);
             System.out.println(matched);
+            //System.out.println(curPasswordHash.compareTo(generatedSecuredPasswordHash));
             
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -257,13 +267,11 @@ public class DendoService {
 		try {            
             //Register
 			UserDAO userDAO = new UserDAO();
-			userDAO.registerUser(userName, firstName, lastName, password, email, phone, birthDate);
-            
+			userDAO.registerUser(userName, firstName, lastName, password, email, phone, birthDate);   
         } catch (Exception e) {
             
         }finally {
         }
-		
 		return Response.status(200).entity(listComments.toString()).build();
 	}
 	
