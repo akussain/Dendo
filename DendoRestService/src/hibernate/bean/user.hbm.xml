@@ -10,7 +10,7 @@
         <property column="phone" name="phone" type="java.lang.String" />
         <property column="first_name" name="firstName" type="java.lang.String" />
         <property column="last_name" name="lastName" type="java.lang.String" />
-        <property column="logo_url" name="imageUrl" type="java.lang.String" />
+        <property column="image_url" name="imageUrl" type="java.lang.String" />
         <property column="date_birth" name="birthDate" type="java.util.Date" />
         <property column="date_registred" name="registredDate" type="java.util.Date" />
     </class>

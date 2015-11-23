@@ -18,7 +18,7 @@ public class UserDAO {
 	public void registerUser(String userName, String firstName, String lastName, String password, String email, String phone, Date birthDate) {
 		try {
 			// 1. configuring hibernate
-            Configuration configuration = new Configuration().configure();
+            Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
  
             // 2. create sessionfactory
             SessionFactory sessionFactory = configuration.buildSessionFactory();
@@ -48,7 +48,8 @@ public class UserDAO {
 	}
 	
 	public User getUser(String userName) {
-		Configuration configuration = new Configuration().configure();
+		Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
+		
         SessionFactory sessionFactory = configuration.buildSessionFactory();
         Session session = sessionFactory.openSession();
         Query query = session.createQuery("from User where userName = :username").setParameter("username", userName);
