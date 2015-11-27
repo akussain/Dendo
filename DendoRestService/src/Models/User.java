@@ -1,7 +1,16 @@
 package Models;
 
 import java.util.Date;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Column;
 
+@Entity
+@Table(name = "users")
 public class User {
 	private int id;
 	private String userName;
@@ -27,6 +36,9 @@ public class User {
 		this.birthDate = birthDate;
 	}
 	
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
 	public int getId() {
 		return id;
 	}
@@ -35,6 +47,7 @@ public class User {
 		this.id = id;
 	}
 	
+	@Column(name = "username", nullable = false, length = 20)
 	public String getUserName() {
 		return userName;
 	}
@@ -43,6 +56,7 @@ public class User {
 		this.userName = userName;
 	}
 	
+	@Column(name = "first_name", nullable = false, length = 50)
 	public String getFirstName() {
 		return firstName;
 	}
@@ -51,6 +65,7 @@ public class User {
 		this.firstName = firstName;
 	}
 	
+	@Column(name = "last_name", nullable = false, length = 50)
 	public String getLastName() {
 		return lastName;
 	}
@@ -59,6 +74,7 @@ public class User {
 		this.lastName = lastName;
 	}
 	
+	@Column(name = "password", nullable = false, length = 100)
 	public String getPassword() {
 		return password;
 	}
@@ -67,6 +83,7 @@ public class User {
 		this.password = password;
 	}
 	
+	@Column(name = "email", nullable = false, length = 50)
 	public String getEmail() {
 		return email;
 	}
@@ -75,6 +92,7 @@ public class User {
 		this.email = email;
 	}
 	
+	@Column(name = "phone", length = 20)
 	public String getPhone() {
 		return phone;
 	}
@@ -83,6 +101,7 @@ public class User {
 		this.phone = phone;
 	}
 	
+	@Column(name = "date_birth")
 	public Date getBirthDate() {
 		return birthDate;
 	}
@@ -91,6 +110,7 @@ public class User {
 		this.birthDate = birthDate;
 	}
 
+	@Column(name = "image_url", length = 100)
 	public String getImageUrl() {
 		return imageUrl;
 	}
@@ -99,6 +119,7 @@ public class User {
 		this.imageUrl = imageUrl;
 	}
 
+	@Column(name = "date_registred")
 	public Date getRegistredDate() {
 		return registredDate;
 	}

@@ -2,6 +2,14 @@ package Models;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Column;
+
+@Entity
+@Table(name = "categories")
 public class Category {
 	private int id;
 	private String name;
@@ -15,6 +23,9 @@ public class Category {
 		this.desc = desc;
 	}
 	
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
 	public int getId() {
 		return id;
 	}
@@ -23,6 +34,7 @@ public class Category {
 		this.id = id;
 	}
 	
+	@Column(name = "name", nullable = false, length = 20)
 	public String getName() {
 		return name;
 	}
@@ -31,6 +43,7 @@ public class Category {
 		this.name = name;
 	}
 	
+	@Column(name = "description", nullable = false, length = 50)
 	public String getDesc() {
 		return desc;
 	}
@@ -39,6 +52,7 @@ public class Category {
 		this.desc = desc;
 	}
 	
+	@Column(name = "date_created")
 	public Date getCreatedDate() {
 		return createdDate;
 	}

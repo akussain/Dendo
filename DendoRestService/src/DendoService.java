@@ -6,6 +6,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 import methods.BCrypt;
+import methods.HTMLParser;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -29,8 +30,13 @@ import java.sql.Statement;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Path("/dendoservice")
 public class DendoService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DendoService.class);
 	
 	@GET
 	@Produces("application/json")
@@ -52,27 +58,8 @@ public class DendoService {
 	public Response getCompanies() throws JSONException {
 		JSONObject listCompanies = new JSONObject();
 		try {        
-			/*
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/dendo","developer", "developer");
-            Statement st = connection.createStatement();
-            String  sqlQuery = "select id, name, description, category_id from companies";
-            a
-            ResultSet rs = st.executeQuery(sqlQuery);
-            JSONArray jsonList = new JSONArray();
-            while(rs.next()) {
-                JSONObject company = new JSONObject();
-                company.put("id", rs.getInt("id"));
-                company.put("name", rs.getString("name"));
-                company.put("desc", rs.getString("description"));
-                company.put("category", rs.getString("category_id"));
+            //logger.info("getCompanies executed");
 
-                jsonList.put(company);
-            }
-            System.out.println("Yes");
-            listCompanies.put("companies", jsonList);
-            */
-            
             //Hibenate
             Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
     		
@@ -96,6 +83,7 @@ public class DendoService {
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            logger.error("This is Error message", e.getMessage());
         }finally {
         }
 		return Response.status(200).entity(listCompanies.toString()).build();
@@ -125,7 +113,7 @@ public class DendoService {
                 discount.put("newPrice", disounts.get(i).getNewPrice());
                 discount.put("dateStarted", disounts.get(i).getStartedDate());
                 discount.put("dateEnded", disounts.get(i).getEndedDate());
-
+                discount.put("company_name", disounts.get(i).getDiscountCompany().getName());
                 jsonList.put(discount);
             }
             listDiscount.put("disounts", jsonList);
@@ -267,6 +255,23 @@ public class DendoService {
         }finally {
         }
 		return Response.status(200).entity(listComments.toString()).build();
+	}
+
+	@GET
+	@Path("/getParse")
+	@Produces("application/json;charset=windows-1251")
+	public Response getParse() throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		Double fahrenheit = 98.24;
+		Double celsius;
+		celsius = (fahrenheit - 32)*5/9; 
+		jsonObject.put("F Value", fahrenheit); 
+		jsonObject.put("C Value", celsius);
+		
+		HTMLParser.parseHTMLPage();
+		
+		String result = "@Produces(\"application/json\") Output: \n\nF to C Converter Output: \n\n" + jsonObject;
+		return Response.status(200).entity(result).build();
 	}
 	
 }

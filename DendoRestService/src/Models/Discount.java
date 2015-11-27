@@ -2,6 +2,17 @@ package Models;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Column;
+
+@Entity
+@Table(name = "discounts")
 public class Discount {
 	private int id;
 	private String title;
@@ -14,6 +25,7 @@ public class Discount {
 	private int isActive;
 	private Date startedDate;
 	private Date endedDate;
+	private Company discountCompany;
 	
 	public Discount() {}
 	
@@ -29,6 +41,9 @@ public class Discount {
 		this.setEndedDate(endedDate);
 	}
 
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
 	public int getId() {
 		return id;
 	}
@@ -37,6 +52,7 @@ public class Discount {
 		this.id = id;
 	}
 
+	@Column(name = "title", nullable = false, length = 20)
 	public String getTitle() {
 		return title;
 	}
@@ -45,6 +61,7 @@ public class Discount {
 		this.title = title;
 	}
 
+	@Column(name = "description", nullable = false, length = 100)
 	public String getDesc() {
 		return desc;
 	}
@@ -53,6 +70,7 @@ public class Discount {
 		this.desc = desc;
 	}
 
+	@Column(name = "date_created")
 	public Date getCreatedDate() {
 		return createdDate;
 	}
@@ -61,6 +79,7 @@ public class Discount {
 		this.createdDate = createdDate;
 	}
 
+	@Column(name = "image_url", nullable = false, length = 100)
 	public String getImageUrl() {
 		return imageUrl;
 	}
@@ -69,6 +88,7 @@ public class Discount {
 		this.imageUrl = imageUrl;
 	}
 
+	@Column(name = "old_price", nullable = false)
 	public double getOldPrice() {
 		return oldPrice;
 	}
@@ -77,6 +97,7 @@ public class Discount {
 		this.oldPrice = oldPrice;
 	}
 
+	@Column(name = "new_price", nullable = false)
 	public double getNewPrice() {
 		return newPrice;
 	}
@@ -85,6 +106,7 @@ public class Discount {
 		this.newPrice = newPrice;
 	}
 
+	@Column(name = "source_portal", length = 50)
 	public String getSourcePortal() {
 		return sourcePortal;
 	}
@@ -93,6 +115,7 @@ public class Discount {
 		this.sourcePortal = sourcePortal;
 	}
 
+	@Column(name = "isActive", nullable = false)
 	public int getIsActive() {
 		return isActive;
 	}
@@ -101,6 +124,7 @@ public class Discount {
 		this.isActive = isActive;
 	}
 
+	@Column(name = "date_started")
 	public Date getStartedDate() {
 		return startedDate;
 	}
@@ -109,12 +133,23 @@ public class Discount {
 		this.startedDate = startedDate;
 	}
 
+	@Column(name = "date_ended")
 	public Date getEndedDate() {
 		return endedDate;
 	}
 
 	public void setEndedDate(Date endedDate) {
 		this.endedDate = endedDate;
+	}
+
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "comp_id")
+	public Company getDiscountCompany() {
+		return discountCompany;
+	}
+
+	public void setDiscountCompany(Company discountCompany) {
+		this.discountCompany = discountCompany;
 	}
 	
 	
