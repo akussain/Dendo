@@ -33,6 +33,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import util.HibernateUtil;
+
 @Path("/dendoservice")
 public class DendoService {
 	
@@ -60,11 +62,7 @@ public class DendoService {
 		try {        
             //logger.info("getCompanies executed");
 
-            //Hibenate
-            Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
-    		
-            SessionFactory sessionFactory = configuration.buildSessionFactory();
-            Session session = sessionFactory.openSession();
+			Session session = HibernateUtil.getSessionFactory().openSession();
             Query query = session.createQuery("from Company");
             List<Company> companies = query.list();
             JSONArray jsonList = new JSONArray();
@@ -95,11 +93,7 @@ public class DendoService {
 	public Response getDiscounts() throws JSONException {
 		JSONObject listDiscount = new JSONObject();
 		try {            
-			//Hibenate
-            Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
-    		
-            SessionFactory sessionFactory = configuration.buildSessionFactory();
-            Session session = sessionFactory.openSession();
+			Session session = HibernateUtil.getSessionFactory().openSession();
             Query query = session.createQuery("from Discount");
             List<Discount> disounts = query.list();
             JSONArray jsonList = new JSONArray();
@@ -113,7 +107,7 @@ public class DendoService {
                 discount.put("newPrice", disounts.get(i).getNewPrice());
                 discount.put("dateStarted", disounts.get(i).getStartedDate());
                 discount.put("dateEnded", disounts.get(i).getEndedDate());
-                discount.put("company_name", disounts.get(i).getDiscountCompany().getName());
+                //discount.put("company_name", disounts.get(i).getDiscountCompany().getName());
                 jsonList.put(discount);
             }
             listDiscount.put("disounts", jsonList);
@@ -163,9 +157,7 @@ public class DendoService {
 	public Response getUsers() throws JSONException {
 		JSONObject listUsers = new JSONObject();
 		try {            
-			Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
-            SessionFactory sessionFactory = configuration.buildSessionFactory();
-            Session session = sessionFactory.openSession();
+			Session session = HibernateUtil.getSessionFactory().openSession();
             Query query = session.createQuery("from User");
             List<User> users = query.list();
             JSONArray jsonList = new JSONArray();
@@ -194,9 +186,7 @@ public class DendoService {
 	public Response getCommentsByDiscount() throws JSONException {
 		JSONObject listComments = new JSONObject();
 		try {            
-			Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
-            SessionFactory sessionFactory = configuration.buildSessionFactory();
-            Session session = sessionFactory.openSession();
+			Session session = HibernateUtil.getSessionFactory().openSession();
             Query query = session.createQuery("from Comment");
             List<Comment> comments = query.list();
             JSONArray jsonList = new JSONArray();

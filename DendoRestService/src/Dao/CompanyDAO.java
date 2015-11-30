@@ -7,15 +7,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import util.HibernateUtil;
 import Models.Company;
 
 public class CompanyDAO {
 
 	public void addCompany(String name, String desc) {
 		try {
-			Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
-			SessionFactory sessionFactory = configuration.buildSessionFactory();
-			Session session = sessionFactory.openSession();
+			Session session = HibernateUtil.getSessionFactory().openSession();
 			Transaction transaction = session.beginTransaction();
 			Company company = new Company();
 			company.setName(name);

@@ -26,10 +26,12 @@ public class Discount {
 	private Date startedDate;
 	private Date endedDate;
 	private Company discountCompany;
+	private String discountUrl;
+	private String discountLabel;
 	
 	public Discount() {}
 	
-	public Discount(String title, String desc, String imageUrl, double oldPrice, double newPrice, String sourcePortal, int isActive, Date startedDate, Date endedDate) {
+	public Discount(String title, String desc, String imageUrl, double oldPrice, double newPrice, String sourcePortal, int isActive, Date startedDate, Date endedDate, String discountUrl, String discountLabel) {
 		this.setTitle(title);
 		this.setDesc(desc);
 		this.setImageUrl(imageUrl);
@@ -39,6 +41,8 @@ public class Discount {
 		this.setIsActive(isActive);
 		this.setStartedDate(startedDate);
 		this.setEndedDate(endedDate);
+		this.setDiscountUrl(discountUrl);
+		this.setDiscountLabel(discountLabel);
 	}
 
 	@Id
@@ -52,7 +56,7 @@ public class Discount {
 		this.id = id;
 	}
 
-	@Column(name = "title", nullable = false, length = 20)
+	@Column(name = "title", nullable = false, length = 200)
 	public String getTitle() {
 		return title;
 	}
@@ -61,7 +65,7 @@ public class Discount {
 		this.title = title;
 	}
 
-	@Column(name = "description", nullable = false, length = 100)
+	@Column(name = "description", nullable = false, length = 200)
 	public String getDesc() {
 		return desc;
 	}
@@ -79,7 +83,7 @@ public class Discount {
 		this.createdDate = createdDate;
 	}
 
-	@Column(name = "image_url", nullable = false, length = 100)
+	@Column(name = "image_url", length = 100)
 	public String getImageUrl() {
 		return imageUrl;
 	}
@@ -88,7 +92,7 @@ public class Discount {
 		this.imageUrl = imageUrl;
 	}
 
-	@Column(name = "old_price", nullable = false)
+	@Column(name = "old_price")
 	public double getOldPrice() {
 		return oldPrice;
 	}
@@ -97,7 +101,7 @@ public class Discount {
 		this.oldPrice = oldPrice;
 	}
 
-	@Column(name = "new_price", nullable = false)
+	@Column(name = "new_price")
 	public double getNewPrice() {
 		return newPrice;
 	}
@@ -150,6 +154,24 @@ public class Discount {
 
 	public void setDiscountCompany(Company discountCompany) {
 		this.discountCompany = discountCompany;
+	}
+
+	@Column(name = "discount_url", length = 300)
+	public String getDiscountUrl() {
+		return discountUrl;
+	}
+
+	public void setDiscountUrl(String discountUrl) {
+		this.discountUrl = discountUrl;
+	}
+
+	@Column(name = "discount_label", length = 50)
+	public String getDiscountLabel() {
+		return discountLabel;
+	}
+
+	public void setDiscountLabel(String discountLabel) {
+		this.discountLabel = discountLabel;
 	}
 	
 	

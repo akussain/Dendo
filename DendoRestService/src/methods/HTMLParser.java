@@ -1,8 +1,14 @@
 package methods;
 
+import org.jsoup.Connection;
+import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import Dao.DiscountDAO;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -38,16 +44,32 @@ public class HTMLParser {
 		 Document doc;
 		 String title = "";
 		 try {
-			 doc = Jsoup.connect("http://nurbiz.kz/").get();
-			 title = doc.title();
+			 /*
+			 for(int i=0; i < 10; i++) {
+				 Connection.Response res = Jsoup.connect("http://nurbiz.kz/?call=title_more_offers")
+						 .method(Method.POST)
+						 .execute();
+			 }
+			 */
 			 
-			 System.out.println(doc.getElementsByClass("cat_special-list").get(0).data());
-			 
-			 doc.getElementsByClass("cat_special-list").get(0);
+			doc = Jsoup.connect("http://nurbiz.kz/").get();
+			title = doc.title();		
+			
+			Elements discountLists = doc.select("div.cat_special-list");
+			for(Element discountList : discountLists) {
+				Elements discountItems = discountList.select("div.cat_special-item-content");
+				for(Element discountItem : discountItems) {
+					System.out.println("Title = " + discountItem.select("div.title").text());
+					System.out.println("Owner = " + discountItem.select("p.owner").text());
+					System.out.println("Label = " + discountItem.select("div.label").text());
+					System.out.println("URL = " + discountItem.select("a[href]").attr("href"));
+					DiscountDAO discountDAO = new DiscountDAO();
+					discountDAO.addDiscount(discountItem.select("p.owner").text(), discountItem.select("div.title").text(), "nurbiz.kz", discountItem.select("a[href]").attr("href"), discountItem.select("div.label").text());
+				}
+		    }
 		 } catch (IOException e) {
-             e.printStackTrace();
+             System.out.println(e.getMessage());
 		 }
-
 		 System.out.println("Jsoup Can read HTML page from URL, title : " + title);
 	 }
 	 

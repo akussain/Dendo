@@ -11,22 +11,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import util.HibernateUtil;
 import Models.User;
 
 public class UserDAO {
 
 	public void registerUser(String userName, String firstName, String lastName, String password, String email, String phone, Date birthDate) {
 		try {
-			// 1. configuring hibernate
-            Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
- 
-            // 2. create sessionfactory
-            SessionFactory sessionFactory = configuration.buildSessionFactory();
- 
-            // 3. Get Session object
-            Session session = sessionFactory.openSession();
-            
-            // 4. Starting Transaction
+			Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             User user = new User();
             user.setUserName(userName);
@@ -44,14 +36,10 @@ public class UserDAO {
 			System.out.println(e.getMessage());
 			System.out.println("Error");
 		}
-		
 	}
 	
 	public User getUser(String userName) {
-		Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
-		
-        SessionFactory sessionFactory = configuration.buildSessionFactory();
-        Session session = sessionFactory.openSession();
+		Session session = HibernateUtil.getSessionFactory().openSession();
         Query query = session.createQuery("from User where userName = :username").setParameter("username", userName);
         User user = (User) query.uniqueResult();
         
